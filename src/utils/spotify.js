@@ -2,8 +2,10 @@
 
 // allows spotify to handle authentaction
 export const authEndpoint = "https://accounts.spotify.com/authorize";
-const redirectUri = "http://localhost:3000/";
-const clientId = "b7699b7ca6ad4f14b201f5ca309a4ffa";
+// added to spotify
+const redirectUri = process.env.REACT_APP_REDIRECT_URI;
+// obtained from spotify
+const clientId = process.env.REACT_APP_CLIENT_ID;
 
 // scopes are telling spotify what it is we are going to let the user do in the app
 const scopes = [
