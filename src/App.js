@@ -19,7 +19,11 @@ const App = () => {
     if (_token) {
       setToken(_token);
 
-      spotify.setAccessToken(_token)
+      spotify.setAccessToken(_token);
+
+      spotify.getMe().then(user => {
+        console.log("user", user)
+      })
       
     }
 
