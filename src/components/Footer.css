@@ -9,6 +9,12 @@
   justify-content: space-between;
 }
 
+/* targets slider and turns it green  .MuiSlider-root */
+.footer__right * .MuiSlider-root {
+  color: green;
+}
+
+
 .footer__left {
   flex: 0.3;
   display: flex;
