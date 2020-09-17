@@ -5,7 +5,7 @@ import Header from './Header'
 const Body = ({spotify}) => {
   return (
     <div className="body">
-      <Headers spotify={spotify} />
+      <Header spotify={spotify} />
 
     </div>
   )

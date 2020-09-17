@@ -1,27 +1,27 @@
-import React from 'react';
+import React from "react";
 import SearchIcon from "@material-ui/icons/Search";
-import { Avatar } from '@material-ui/core';
+import { Avatar } from "@material-ui/core";
+import { useStateProviderValue } from "../reducer/StateProvider"
+import "./Header.css"
 
-
-const Header = ({spotify}) => {
+const Header = ({ spotify }) => {
+  const [{ user }, dispatch ] = useStateProviderValue();
+  
   return (
-    <div className='header'>
+    <div className="header">
       <div className="header__left">
-      <SearchIcon />
-      <input 
-        placeholder="Search for Artists, Songs, or Playlists"
-        type="text"
-      />
-
-
+        <SearchIcon />
+        <input
+          placeholder="Search for Artists, Songs, or Playlists"
+          type="text"
+        />
       </div>
       <div className="header__right">
-        <Avatar src="" alt=""/>
-                  <h4>Cedric Winbush</h4>
-
+        <Avatar src={user?.images[0]?.url} alt={user?.display_name} />
+        <h4>{user?.display_name}</h4>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
