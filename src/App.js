@@ -21,12 +21,19 @@ const App = () => {
     const _token = hash.access_token;
 
     if (_token) {
+      spotify.setAccessToken(_token);
+
       dispatch({
         type: "SET_TOKEN",
         token: _token,
       });
-
-      spotify.setAccessToken(_token);
+      // need to change playlist it is getting to correct id
+      spotify.getPlaylist("37i9dQZF1DXcBWIGoYBM5M").then((response) =>
+        dispatch({
+          type: "SET_DISCOVER_WEEKLY",
+          discover_weekly: response,
+        })
+      );
 
       spotify.getMe().then((user) => {
         dispatch({
