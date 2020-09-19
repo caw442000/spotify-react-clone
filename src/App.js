@@ -27,8 +27,13 @@ const App = () => {
         type: "SET_TOKEN",
         token: _token,
       });
+
+      dispatch({
+        type: "SET_SPOTIFY",
+        spotify: spotify,
+      });
       // need to change playlist it is getting to correct id
-      spotify.getPlaylist("37i9dQZF1DXcBWIGoYBM5M").then((response) =>
+      spotify.getPlaylist("37i9dQZEVXcEmKE3MxudMe").then((response) =>
         dispatch({
           type: "SET_DISCOVER_WEEKLY",
           discover_weekly: response,
@@ -41,6 +46,8 @@ const App = () => {
           user: user,
         });
       });
+
+      
       spotify.getUserPlaylists().then((playlists) => {
         dispatch({
           type: "SET_PLAYLISTS",

@@ -2,11 +2,13 @@ export const initialState = {
   user: null,
   playlists: [],
   playing: false,
+  spotify: null,
+  top_artists: null,
   item: null,
   discover_weekly: null,
   //remove after developing
   // token: process.env.REACT_APP_SPOTIFY_TEMP_TOKEN,
-  // token: null,
+  token: null,
 };
 
 const reducer = (state, action) => {
@@ -25,12 +27,33 @@ const reducer = (state, action) => {
         ...state,
         token: action.token,
       };
-      case "SET_PLAYLISTS":
+    case "SET_PLAYING":
+      return {
+        ...state,
+        playing: action.playing,
+      };
+
+    case "SET_ITEM":
+      return {
+        ...state,
+        item: action.item,
+      };
+    case "SET_TOP_ARTISTS":
+      return {
+        ...state,
+        top_artists: action.top_artists,
+      };
+    case "SET_SPOTIFY":
+      return {
+        ...state,
+        spotify: action.spotify,
+      };
+    case "SET_PLAYLISTS":
       return {
         ...state,
         playlists: action.playlists,
       };
-      case "SET_DISCOVER_WEEKLY":
+    case "SET_DISCOVER_WEEKLY":
       return {
         ...state,
         discover_weekly: action.discover_weekly,
