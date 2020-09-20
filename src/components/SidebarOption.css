@@ -18,8 +18,18 @@
   padding: 0 10px
 }
 
-.sidebarOption > p {
+.sidebarOption > div {
+  width: 100%;
   margin-top: 10px;
   margin-left: 20px;
   font-size: 14px;
+  text-align: left;
+  color: grey;
+  background-color: 040404;
+
+}
+.sidebarOption > div:hover {
+  color: white;
+
+
 }

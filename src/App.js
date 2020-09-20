@@ -28,17 +28,17 @@ const App = () => {
         token: _token,
       });
 
-      dispatch({
-        type: "SET_SPOTIFY",
-        spotify: spotify,
-      });
+      // dispatch({
+      //   type: "SET_SPOTIFY",
+      //   spotify: spotify,
+      // });
       // need to change playlist it is getting to correct id
-      spotify.getPlaylist("37i9dQZEVXcEmKE3MxudMe").then((response) =>
-        dispatch({
-          type: "SET_DISCOVER_WEEKLY",
-          discover_weekly: response,
-        })
-      );
+      // spotify.getPlaylist("37i9dQZEVXcEmKE3MxudMe").then((response) =>
+      //   dispatch({
+      //     type: "SET_DISCOVER_WEEKLY",
+      //     discover_weekly: response,
+      //   })
+      // );
 
       spotify.getMe().then((user) => {
         dispatch({

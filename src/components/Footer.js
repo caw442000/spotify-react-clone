@@ -10,126 +10,173 @@ import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
 import PlaylistPlayIcon from "@material-ui/icons/PlaylistPlay";
 import { Grid, Slider } from "@material-ui/core";
 import { useStateProviderValue } from "../reducer/StateProvider";
+import { useSoundLayerValue } from "../reducer/SoundLayer";
 
+const Footer = () => {
+  const [{ track, tracks }, dispatch] = useStateProviderValue();
+  const [
+    { audio, playing, volume, repeat, shuffle },
+    soundDispatch,
+  ] = useSoundLayerValue();
 
-const Footer = ({spotify}) => {
-  const [{ token, item, playing }, dispatch] = useStateProviderValue();
-
-  useEffect(() => {
-    spotify.getMyCurrentPlaybackState().then((r) => {
-      console.log(r);
-
-      dispatch({
-        type: "SET_PLAYING",
-        playing: r.is_playing,
-      });
-
-      dispatch({
-        type: "SET_ITEM",
-        item: r.item,
-      });
+  const startPlaying = () => {
+    soundDispatch({
+      type: "SET_PLAYING",
+      playing: true,
     });
-  }, [spotify]);
+    // soundDispatch({
+    //   type: "SET_VOLUME",
+    //   volume: volume / 100,
+    // });
+  };
 
-  const handlePlayPause = () => {
-    if (playing) {
-      spotify.pause();
-      dispatch({
-        type: "SET_PLAYING",
-        playing: false,
-      });
-    } else {
-      spotify.play();
-      dispatch({
-        type: "SET_PLAYING",
-        playing: true,
-      });
+  const stopPlaying = () => {
+    soundDispatch({
+      type: "SET_PLAYING",
+      playing: false,
+    });
+  };
+
+  const setRepeat = () => {
+    if (!repeat && shuffle) {
+      setShuffle();
     }
-  };
-
-  const skipNext = () => {
-    spotify.skipToNext();
-    spotify.getMyCurrentPlayingTrack().then((r) => {
-      dispatch({
-        type: "SET_ITEM",
-        item: r.item,
-      });
-      dispatch({
-        type: "SET_PLAYING",
-        playing: true,
-      });
+    soundDispatch({
+      type: "SET_REPEAT",
+      repeat: !repeat,
     });
   };
 
-  const skipPrevious = () => {
-    spotify.skipToPrevious();
-    spotify.getMyCurrentPlayingTrack().then((r) => {
-  
-      dispatch({
-        type: "SET_PLAYING",
-        playing: true,
-      });
-      dispatch({
-        type: "SET_ITEM",
-        item: r.item,
-      });
+  const setShuffle = () => {
+    if (!shuffle && repeat) {
+      setRepeat();
+    }
+    soundDispatch({
+      type: "SET_SHUFFLE",
+      shuffle: !shuffle,
     });
   };
+
+  const handleChange = (event, value) => {   
+    console.log("volume value", value) 
+    soundDispatch({
+      type: "SET_VOLUME",
+      volume: value / 100,
+    });
+  };
+
+  if (audio) {
+    audio.onended = () => {
+      if (shuffle) {
+        while (true) {
+          let randomTrackNumber = Math.floor(
+            Math.random() * tracks.items.length
+          );
+          let randomTrack = tracks.items[randomTrackNumber].track;
+          if (track !== randomTrack) {
+            dispatch({
+              type: "SET_TRACK",
+              track: randomTrack,
+            });
+
+            let wasPlaying = playing;
+            soundDispatch({
+              type: "SET_PLAYING",
+              playing: false,
+            });
+
+            let audio = new Audio(randomTrack.preview_url);
+            audio.loop = repeat;
+            soundDispatch({
+              type: "SET_AUDIO",
+              audio: audio,
+            });
+
+            if (wasPlaying) {
+              soundDispatch({
+                type: "SET_PLAYING",
+                playing: true,
+              });
+            }
+
+            document.title = `${randomTrack.name} · ${randomTrack.artists
+              .map((artist) => artist.name)
+              .join(", ")}`;
+            break;
+          }
+        }
+      }
+      if (!shuffle && !repeat) {
+        soundDispatch({
+          type: "SET_PLAYING",
+          playing: false,
+        });
+      }
+    };
+  }
 
   return (
     <div className="footer">
-    <div className="footer__left">
-      <img
-        className="footer__albumLogo"
-        src={item?.album.images[0].url}
-        alt={item?.name}
-      />
-      {item ? (
-        <div className="footer__songInfo">
-          <h4>{item.name}</h4>
-          <p>{item.artists.map((artist) => artist.name).join(", ")}</p>
-        </div>
-      ) : (
-        <div className="footer__songInfo">
-          <h4>No song is playing</h4>
-          <p>...</p>
-        </div>
-      )}
-    </div>
-
-    <div className="footer__center">
-      <ShuffleIcon className="footer__green" />
-      <SkipPreviousIcon onClick={skipNext} className="footer__icon" />
-      {playing ? (
-        <PauseCircleOutlineIcon
-          onClick={handlePlayPause}
-          fontSize="large"
-          className="footer__icon"
+      <div className="footer__left">
+        <img
+          className="footer__albumLogo"
+          src={track ? track.album.images[0].url : ""}
+          alt=""
         />
-      ) : (
-        <PlayCircleOutlineIcon
-          onClick={handlePlayPause}
-          fontSize="large"
-          className="footer__icon"
+        <div className="footer__songInfo">
+          <h4>{track ? track.name : "No song selected"}</h4>
+          <p>
+            {track
+              ? track.artists.map((artist) => artist.name).join(", ")
+              : null}
+          </p>
+        </div>
+      </div>
+      <div className="footer__center">
+        <ShuffleIcon
+          onClick={track ? setShuffle : null}
+          className={shuffle ? "footer__green" : "footer__icon"}
         />
-      )}
-      <SkipNextIcon onClick={skipPrevious} className="footer__icon" />
-      <RepeatIcon className="footer__green" />
+        <SkipPreviousIcon className="footer__icon" />
+        {playing ? (
+          <PauseCircleOutlineIcon
+            onClick={track ? stopPlaying : null}
+            fontSize="large"
+            className="footer__icon"
+          />
+        ) : (
+          <PlayCircleOutlineIcon
+            onClick={track ? startPlaying : null}
+            fontSize="large"
+            className="footer__icon"
+          />
+        )}
+        <SkipNextIcon className="footer__icon" />
+        <RepeatIcon
+          onClick={track ? setRepeat : null}
+          className={repeat ? "footer__green" : "footer__icon"}
+        />
+      </div>
+      <div className="footer__right">
+        <Grid container spacing={2}>
+          <Grid item>
+            <PlaylistPlayIcon />
+          </Grid>
+          <Grid item>
+            <VolumeDownIcon />
+          </Grid>
+          <Grid item xs>
+            <Slider
+              aria-labelledby="discrete-slider"
+              valueLabelDisplay="off"
+              onChange={handleChange}
+              min={0}
+              max={100}
+            />
+          </Grid>
+        </Grid>
+      </div>
     </div>
-    <div className="footer__right">
-      <Grid container spacing={2}>
-        <Grid item>
-          <PlaylistPlayIcon />
-        </Grid>
-        <Grid item>
-          <VolumeDownIcon />
-        </Grid>
-        <Grid item xs>
-          <Slider aria-labelledby="continuous-slider" />
-        </Grid>
-      </Grid>
-    </div>
-  </div>
   );
 };
 

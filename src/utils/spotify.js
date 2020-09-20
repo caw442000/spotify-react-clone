@@ -3,7 +3,9 @@
 // allows spotify to handle authentaction
 export const authEndpoint = "https://accounts.spotify.com/authorize";
 // added to spotify
-const redirectUri = process.env.REACT_APP_REDIRECT_URI;
+const redirectUrl = window.location.origin + '/' || process.env.REACT_APP_REDIRECT_URI; //where are you running your app (local react by default is http://localhost:3000/
+
+// const redirectUri = process.env.REACT_APP_REDIRECT_URI
 // obtained from spotify
 const clientId = process.env.REACT_APP_CLIENT_ID;
 
@@ -27,5 +29,6 @@ export const getTokenFromUrl = () => {
       return initial;
     }, {})
 }
+export const loginUrl = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUrl}&scopes=${scopes.join('%20')}&response_type=token&show_dialog=true`;
 
-export const loginUrl = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join("%20")}&response_type=token&show_dialog=true`;
+// export const loginUrl = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join("%20")}&response_type=token&show_dialog=true`;

@@ -4,8 +4,8 @@ import SidebarOption from "./SidebarOption";
 import {Home, Search, LibraryMusic} from '@material-ui/icons';
 import { useStateProviderValue } from "../reducer/StateProvider";
 
-const Sidebar = () => {
-  const[{playlists }, dispatch] = useStateProviderValue()
+const Sidebar = ({spotify}) => {
+  const[{playlists }] = useStateProviderValue()
   return (
     <div className="sidebar">
       <img className="sidebar__logo"
@@ -20,7 +20,7 @@ const Sidebar = () => {
       <hr/>
       {playlists?.items?.map(playlist => (
 
-      <SidebarOption key={playlist.id}title = {playlist.name} />
+      <SidebarOption key={playlist.id} id = {playlist.id} spotify= {spotify} title = {playlist.name} />
       )) }
       
     </div>
