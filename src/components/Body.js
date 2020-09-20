@@ -58,7 +58,7 @@ return (
                 <MoreHorizIcon/>
             </div>
             {tracks?.items.map(track => {
-                return <SongRow track={track.track} key={track.track.id}/>
+                return <SongRow spotify= {spotify} track={track.track} key={track.track.id}/>
             })}
         </div>
     </div>
