@@ -33,12 +33,18 @@ const App = () => {
       //   spotify: spotify,
       // });
       // need to change playlist it is getting to correct id
-      // spotify.getPlaylist("37i9dQZEVXcEmKE3MxudMe").then((response) =>
-      //   dispatch({
-      //     type: "SET_DISCOVER_WEEKLY",
-      //     discover_weekly: response,
-      //   })
-      // );
+      spotify.getPlaylist("37i9dQZEVXcEmKE3MxudMe").then((response) =>
+        dispatch({
+          type: "SET_CURRENT_PLAYLIST",
+          discover_weekly: response,
+        })
+      );
+      spotify.getPlaylistTracks("37i9dQZEVXcEmKE3MxudMe").then((response) => {
+        dispatch({
+            type: 'SET_TRACKS',
+            tracks: response
+        })
+    });
 
       spotify.getMe().then((user) => {
         dispatch({

@@ -120,7 +120,7 @@ const Footer = () => {
       <div className="footer__left">
         <img
           className="footer__albumLogo"
-          src={track ? track.album.images[0].url : ""}
+          src={track ? track?.album?.images[0]?.url : ""}
           alt=""
         />
         <div className="footer__songInfo">

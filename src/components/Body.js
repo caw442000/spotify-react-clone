@@ -57,8 +57,8 @@ return (
                 <FavoriteIcon fontSize='large'/>
                 <MoreHorizIcon/>
             </div>
-            {tracks?.items.map(track => {
-                return <SongRow spotify= {spotify} track={track.track} key={track.track.id}/>
+            {tracks?.items.map((track, index) => {
+                return <SongRow spotify= {spotify} track={track.track} key={index}/>
             })}
         </div>
     </div>
